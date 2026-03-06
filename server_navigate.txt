@@ -83,3 +83,16 @@ await contract.someFunction();
 
 **Notes:**
 - Returns total account balance in wei.
+
+### **Installing the Tools**
+
+**You install OpenZeppelin packages:**
+- npm install @openzeppelin/contracts-upgradeable
+- npm install --save-dev @openzeppelin/hardhat-upgrades
+
+**Important detail:**
+contracts-upgradeable
+not
+contracts
+Why?
+Upgradeable versions remove constructors and replace them with initializers.
