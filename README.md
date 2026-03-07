@@ -1,110 +1,95 @@
-# **Blockchain**
-## **Hardhat Workflow**
+# Blockchain
+## Hardhat Workflow (Ethers v6)
 
-### **1. Initialize Project**
-**Command:**
-`npx hardhat init`
+### 1. Initialize project
+```bash
+npx hardhat --init
+```
 
-**Notes:**
-- Creates the project workspace.
-- Run `npm install` if dependencies are missing.
-- Installs packages listed in `package.json`.
-- If installation fails, retry with `--force` only when necessary.
+Notes:
+- Use `npx hardhat` for interactive project setup.
+- Then install dependencies with `npm install`.
 
-### **2. Compile Contracts**
-**Command:**
-`npx hardhat compile`
+### 2. Compile contracts
+```bash
+npx hardhat compile
+```
 
-**Notes:**
-- Compiles Solidity into bytecode.
-- Generates ABI files.
-- Stores build artifacts.
+### 3. Run tests
+```bash
+npx hardhat test
+```
 
-### **3. Run Tests**
-**Command:**
-`npx hardhat test`
+### 4. Start local blockchain
+```bash
+npx hardhat node
+```
 
-**Notes:**
-- Executes test files.
-- Deploys contracts as part of test runs.
+Keep this running in Terminal 1.
 
-### **4. Start Local Blockchain**
-**Command:**
-`npx hardhat node`
+### 5. Deploy to localhost
+```bash
+npx hardhat run script/deploy.js --network localhost
+```
 
-**Notes:**
-- Keep this running in Terminal 1.
+### 6. Open console on localhost
+```bash
+npx hardhat console --network localhost
+```
 
-### **5. Deploy to Localhost**
-**Command:**
-`npx hardhat run script/deploy.js --network localhost`
-
-**Notes:**
-- Deploys the contract to the local Hardhat node.
-- Contract is now available on `localhost`.
-
-### **6. Open Hardhat Console on Localhost**
-**Command:**
-`npx hardhat console --network localhost`
-
-Use this to call contract functions:
+Example interaction:
 ```js
 const MyContract = await ethers.getContractFactory("MyContract");
 const contract = await MyContract.attach("<DEPLOYED_ADDRESS>");
 await contract.someFunction();
 ```
 
-### **7. Check Blockchain State**
-**Commands:**
-- `await ethers.provider.getBlockNumber();`
-- `await ethers.provider.getBlock();`
-- `await ethers.provider.getBlockWithTransactions(1);`
-- `await ethers.provider.getTransaction("TX_HASH");`
-- `await ethers.provider.getTransactionReceipt("TX_HASH");`
-- `await ethers.provider.getStorage(contract.address, 0);`
+### 7. Check chain state
+```js
+await ethers.provider.getBlockNumber();
+await ethers.provider.getBlock("latest");
+await ethers.provider.getBlock(1, true);
+await ethers.provider.getTransaction("TX_HASH");
+await ethers.provider.getTransactionReceipt("TX_HASH");
+await ethers.provider.getStorage(await contract.getAddress(), 0);
+```
 
-**Notes:**
-- `getBlockNumber()` returns the latest block number.
-- `getBlock()` returns details of the latest block.
-- `getBlockWithTransactions(1)` returns block `1` with full transaction data.
-- `getTransaction("TX_HASH")` returns transaction details by hash.
-- `getTransactionReceipt("TX_HASH")` returns status, gas used, and logs.
-- `getStorage(contract.address, 0)` returns value in storage slot `0`.
+### 8. Get signers
+```js
+const [owner, user] = await ethers.getSigners();
+```
 
-**You can inspect:**
-- Block timestamp
-- Transaction hash
-- Gas used
+### 9. Check addresses
+```js
+owner.address;
+user.address;
+```
 
-### **8. Get Signers**
-**Command:**
-`const [owner, user] = await ethers.getSigners();`
+### 10. Check balance (wei)
+```js
+await ethers.provider.getBalance(owner.address);
+```
 
-**Notes:**
-- Retrieves accounts from the local node.
-- Accounts can sign transactions.
+## Ethers v6 notes (important)
 
-### **9. Check Public Addresses**
-**Commands:**
-- `owner.address`
-- `user.address`
+- Use `await contract.getAddress()` instead of `contract.address`.
+- Many numeric values are now `bigint`.
+- Format wei values with:
+```js
+ethers.formatEther(balance);
+```
+- In deploy scripts, prefer:
+```js
+await contract.waitForDeployment();
+```
 
-### **10. Check Account Balance (wei)**
-**Command:**
-`await ethers.provider.getBalance(owner.address)`
+## OpenZeppelin upgradeable packages
 
-**Notes:**
-- Returns total account balance in wei.
+Install:
+```bash
+npm install @openzeppelin/contracts-upgradeable
+npm install --save-dev @openzeppelin/hardhat-upgrades
+```
 
-### **Installing the Tools**
-
-**You install OpenZeppelin packages:**
-- npm install @openzeppelin/contracts-upgradeable
-- npm install --save-dev @openzeppelin/hardhat-upgrades
-
-**Important detail:**
-contracts-upgradeable
-not
-contracts
-Why?
-Upgradeable versions remove constructors and replace them with initializers.
+Why `contracts-upgradeable`:
+- Upgradeable contracts use initializer functions instead of constructors.
