@@ -1,0 +1,98 @@
+# **Blockchain**
+## **Hardhat Workflow**
+
+### **1. Initialize Project**
+**Command:**
+`npx hardhat init`
+
+**Notes:**
+- Creates the project workspace.
+- Run `npm install` if dependencies are missing.
+- Installs packages listed in `package.json`.
+- If installation fails, retry with `--force` only when necessary.
+
+### **2. Compile Contracts**
+**Command:**
+`npx hardhat compile`
+
+**Notes:**
+- Compiles Solidity into bytecode.
+- Generates ABI files.
+- Stores build artifacts.
+
+### **3. Run Tests**
+**Command:**
+`npx hardhat test`
+
+**Notes:**
+- Executes test files.
+- Deploys contracts as part of test runs.
+
+### **4. Start Local Blockchain**
+**Command:**
+`npx hardhat node`
+
+**Notes:**
+- Keep this running in Terminal 1.
+
+### **5. Deploy to Localhost**
+**Command:**
+`npx hardhat run script/deploy.js --network localhost`
+
+**Notes:**
+- Deploys the contract to the local Hardhat node.
+- Contract is now available on `localhost`.
+
+### **6. Open Hardhat Console on Localhost**
+**Command:**
+`npx hardhat console --network localhost`
+
+Use this to call contract functions:
+```js
+const MyContract = await ethers.getContractFactory("MyContract");
+const contract = await MyContract.attach("<DEPLOYED_ADDRESS>");
+await contract.someFunction();
+```
+
+### **7. Check Blockchain State**
+**Commands:**
+- `await ethers.provider.getBlockNumber();`
+- `await ethers.provider.getBlock();`
+
+**You can inspect:**
+- Block timestamp
+- Transaction hash
+- Gas used
+
+### **8. Get Signers**
+**Command:**
+`const [owner, user] = await ethers.getSigners();`
+
+**Notes:**
+- Retrieves accounts from the local node.
+- Accounts can sign transactions.
+
+### **9. Check Public Addresses**
+**Commands:**
+- `owner.address`
+- `user.address`
+
+### **10. Check Account Balance (wei)**
+**Command:**
+`await ethers.provider.getBalance(owner.address)`
+
+**Notes:**
+- Returns total account balance in wei.
+
+### **Installing the Tools**
+
+**You install OpenZeppelin packages:**
+- npm install @openzeppelin/contracts-upgradeable
+- npm install --save-dev @openzeppelin/hardhat-upgrades
+
+**Important detail:**
+contracts-upgradeable
+not
+contracts
+Why?
+Upgradeable versions remove constructors and replace them with initializers.
