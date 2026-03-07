@@ -58,18 +58,6 @@ await contract.someFunction();
 **Commands:**
 - `await ethers.provider.getBlockNumber();`
 - `await ethers.provider.getBlock();`
-- `await ethers.provider.getBlockWithTransactions(1);`
-- `await ethers.provider.getTransaction("TX_HASH");`
-- `await ethers.provider.getTransactionReceipt("TX_HASH");`
-- `await ethers.provider.getStorage(contract.address, 0);`
-
-**Notes:**
-- `getBlockNumber()` returns the latest block number.
-- `getBlock()` returns details of the latest block.
-- `getBlockWithTransactions(1)` returns block `1` with full transaction data.
-- `getTransaction("TX_HASH")` returns transaction details by hash.
-- `getTransactionReceipt("TX_HASH")` returns status, gas used, and logs.
-- `getStorage(contract.address, 0)` returns value in storage slot `0`.
 
 **You can inspect:**
 - Block timestamp
